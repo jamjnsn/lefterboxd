@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CachedMovie;
+use App\Models\Vote;
 use Illuminate\Http\Request;
-use App\Models\Movie;
-use App\Models\MovieRatings;
 use Illuminate\Support\Facades\Auth;
 
 class VoteController extends Controller
@@ -15,7 +15,7 @@ class VoteController extends Controller
     }
 
     function get($id) {
-        $vote = MovieRatings::where([
+        $vote = Vote::where([
             'user_id' => Auth::user()->id,
             'movie_id' => $id
         ])->first();
@@ -24,15 +24,18 @@ class VoteController extends Controller
     }
 
     function vote($id, Request $request) {
-        $movie = Movie::find_or_fetch($id);
+        $movie = CachedMovie::findOrFetch($id);
+        $option = $request->post('option');
 
-        $vote = MovieRatings::firstOrNew([
-            'user_id' => Auth::user()->id,
-            'movie_id' => $id
-        ]);
+        if($option == Vote::YES || $option == Vote::NO) {
+            $vote = Vote::firstOrNew([
+                'user_id' => Auth::user()->id,
+                'movie_id' => $id
+            ]);
 
-        $vote->score = $request->post('score');
-        $vote->save();
+            $vote->option = $request->post('option');
+            $vote->save();
+        }
 
         return $movie;
     }

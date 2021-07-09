@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movie;
+use App\Models\CachedMovie;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -14,7 +14,7 @@ class MovieController extends Controller
     }
 
     function get($id) {
-        $movie = Movie::find_or_fetch($id);
+        $movie = CachedMovie::findOrFetch($id);
         return $movie;
     }
 }

@@ -2,14 +2,29 @@
 @import '~bootstrap/scss/bootstrap';
 
 .navbar {
+    padding: 0.5rem;
+
     .navbar-brand {
         font-size: 2rem;
         font-weight: bold;
+        display: flex;
+        align-items: center;
+        padding: 0;
+
+        .app-name {
+            display: block;
+            margin: 0;
+            margin-left: 0.5rem;
+        }
 
         img {
-            display: inline-block;
-            align-content: center;
+            display: block;
         }
+    }
+
+    &.navbar-transparent {
+        background-color: transparent;
+        box-shadow: none;
     }
 }
 

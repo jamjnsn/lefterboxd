@@ -16,10 +16,10 @@
                             @click="voteYes"
                             type="button"
                             class="vote-button vote-button-yes"
-                            :class="currentVote && currentVote.score == 1 ? 'is-selected' : ''"
+                            :class="currentVote && currentVote.option == 'yes' ? 'is-selected' : ''"
                             >Yes</button>
                         <div v-if="!isLoggedIn" class="vote-label-yes vote-label">Yes</div>
-                        <div class="vote-count">{{ yesPercent }}</div>
+                        <div class="vote-count">{{ data.counts.yesPercent }}%</div>
                     </div>
 
                     <div class="votes no-votes">
@@ -28,10 +28,10 @@
                             @click="voteNo"
                             type="button"
                             class="vote-button vote-button-no"
-                            :class="currentVote && currentVote.score == -1 ? 'is-selected' : ''"
+                            :class="currentVote && currentVote.option == 'no' ? 'is-selected' : ''"
                             >No</button>
                         <div v-if="!isLoggedIn" class="vote-label-no vote-label">No</div>
-                        <div class="vote-count">{{ noPercent }}</div>
+                        <div class="vote-count">{{ data.counts.noPercent }}%</div>
                     </div>
                 </div>
             </div>
@@ -56,20 +56,6 @@ export default {
     computed: {
         isLoggedIn() {
             return window.isLoggedIn
-        },
-        yesPercent() {
-            if(this.data.total_votes > 0 && this.data.yes_votes > 0) {
-                return ((this.data.total_votes / this.data.yes_votes) * 100) + '%'
-            } else {
-                return '0%'
-            }
-        },
-        noPercent() {
-            if(this.data.total_votes > 0 && this.data.no_votes > 0) {
-                return ((this.data.total_votes / this.data.no_votes) * 100) + '%'
-            } else {
-                return '0%'
-            }
         },
         backdropStyle() {
             return 'background-image:url('+this.data.backdrop_url+');'
@@ -100,13 +86,13 @@ export default {
             }
         },
         voteYes() {
-            this.sendVote(1)
+            this.sendVote('yes')
         },
         voteNo() {
-            this.sendVote(-1)
+            this.sendVote('no')
         },
-        sendVote(score) {
-            window.axios.post('/movie/'+this.id+'/vote', { score: score })
+        sendVote(option) {
+            window.axios.post('/movie/'+this.id+'/vote', { option: option })
                 .then(response => {
                     this.update()
                 })

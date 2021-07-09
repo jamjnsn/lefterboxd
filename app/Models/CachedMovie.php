@@ -9,7 +9,7 @@ use Tmdb\Laravel\Facades\Tmdb;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 
 
-class Movie extends Model
+class CachedMovie extends Model
 {
     use HasFactory;
 
@@ -21,9 +21,7 @@ class Movie extends Model
         'poster_url',
         'backdrop_url',
         'release_year',
-        'yes_votes',
-        'no_votes',
-        'total_votes'
+        'counts'
     ];
 
     public function getReleaseYearAttribute() {
@@ -39,31 +37,45 @@ class Movie extends Model
         return 'https://image.tmdb.org/t/p/w1280' . $this->data['backdrop_path'];
     }
 
-    public function getYesVotesAttribute() {
-        return MovieRatings::where([
-            "movie_id" => $this->id,
-            "score" => 1
-            ])->count();
+    public function getVotesAttribute()
+    {
+        return Vote::where('movie_id', $this->id);
     }
 
-    public function getNoVotesAttribute() {
-        return MovieRatings::where([
-            "movie_id" => $this->id,
-            "score" => -1
-        ])->count();
-    }
+    public function getCountsAttribute() {
+        $yesCount = $this->votes->where('option', 'yes')->count();
+        $noCount = $this->votes->where('option', 'no')->count();
+        $totalCount = $this->votes->count();
 
-    public function getTotalVotesAttribute() {
-        return MovieRatings::where([
-            "movie_id" => $this->id
-        ])->count();
+        if($totalCount > 0) {
+            if($yesCount > 0) {
+                $yesPercent = round(($totalCount / $yesCount) * 100);
+                $noPercent = 100 - $yesPercent;
+            } else {
+                $yesPercent = 0;
+                $noPercent = 100;
+            }
+        } else {
+            $yesPercent = 0;
+            $noPercent = 0;
+        }
+
+        $counts = [
+            'total' => $totalCount,
+            'yes' => $yesCount,
+            'no' => $noCount,
+            'yesPercent' => $yesPercent,
+            'noPercent' => $noPercent
+        ];
+
+        return $counts;
     }
 
     public static function cacheAll($movies) {
         $cachedMovies = [];
 
         foreach($movies as $movie) {
-            $cachedMovie = Movie::firstOrNew([
+            $cachedMovie = CachedMovie::firstOrNew([
                 'id' => $movie->id
             ]);
 
@@ -74,14 +86,14 @@ class Movie extends Model
         }
     }
 
-    public static function find_or_fetch($id) {
-        $movie = Movie::find($id);
+    public static function findOrFetch($id) {
+        $movie = CachedMovie::find($id);
 
         if($movie == null) {
             try {
                 $movie_data = Tmdb::getMoviesApi()->getMovie($id);
 
-                $movie = new Movie();
+                $movie = new CachedMovie();
                 $movie->id = $movie_data["id"];
                 $movie->data = $movie_data;
 

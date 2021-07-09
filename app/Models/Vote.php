@@ -5,11 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MovieRatings extends Model
+class Vote extends Model
 {
     use HasFactory;
 
+    public const YES = 'yes';
+    public const NO = 'no';
+
     protected $fillable = [
-        'movie_id', 'user_id', 'score'
+        'movie_id', 'user_id', 'option'
     ];
 }

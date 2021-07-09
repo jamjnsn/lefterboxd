@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMoviesTable extends Migration
+class CreateCachedMovies extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateMoviesTable extends Migration
      */
     public function up()
     {
-        Schema::create('movies', function (Blueprint $table) {
+        Schema::create('cached_movies', function (Blueprint $table) {
             $table->primary('id');
-            $table->bigInteger('id', false, true);
+            $table->unsignedBigInteger('id')->unique();
 
             $table->timestamps();
             $table->json('data');
@@ -29,6 +29,6 @@ class CreateMoviesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('movies');
+        Schema::dropIfExists('cached_movies');
     }
 }

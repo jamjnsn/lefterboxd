@@ -11,12 +11,26 @@
 
                 <div class="votes-container">
                     <div class="votes yes-votes">
-                        <button type="button" class="btn btn-success" @click="voteYes">Yes</button>
+                        <button
+                            v-if="isLoggedIn"
+                            @click="voteYes"
+                            type="button"
+                            class="vote-button vote-button-yes"
+                            :class="currentVote && currentVote.score == 1 ? 'is-selected' : ''"
+                            >Yes</button>
+                        <div v-if="!isLoggedIn" class="vote-label-yes vote-label">Yes</div>
                         <div class="vote-count">{{ yesPercent }}</div>
                     </div>
 
                     <div class="votes no-votes">
-                        <button type="button" class="btn btn-danger" @click="voteNo">No</button>
+                        <button
+                            v-if="isLoggedIn"
+                            @click="voteNo"
+                            type="button"
+                            class="vote-button vote-button-no"
+                            :class="currentVote && currentVote.score == -1 ? 'is-selected' : ''"
+                            >No</button>
+                        <div v-if="!isLoggedIn" class="vote-label-no vote-label">No</div>
                         <div class="vote-count">{{ noPercent }}</div>
                     </div>
                 </div>
@@ -35,10 +49,14 @@ export default {
     data() {
         return {
             isLoaded: false,
-            data: []
+            data: [],
+            currentVote: null
         }
     },
     computed: {
+        isLoggedIn() {
+            return window.isLoggedIn
+        },
         yesPercent() {
             if(this.data.total_votes > 0 && this.data.yes_votes > 0) {
                 return ((this.data.total_votes / this.data.yes_votes) * 100) + '%'
@@ -66,11 +84,20 @@ export default {
                 .then(response => {
                     this.data = response.data
                     this.isLoaded = true
-                    console.log(this.data)
                 })
                 .catch(error => {
                     console.log(error)
                 })
+
+            if(this.isLoggedIn) {
+                window.axios.get('/movie/'+this.id+'/vote')
+                    .then(response => {
+                        this.currentVote = response.data
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            }
         },
         voteYes() {
             this.sendVote(1)
@@ -81,7 +108,7 @@ export default {
         sendVote(score) {
             window.axios.post('/movie/'+this.id+'/vote', { score: score })
                 .then(response => {
-                    this.data = response.data
+                    this.update()
                 })
                 .catch(error => {
                     console.log(error)
@@ -107,7 +134,7 @@ export default {
         bottom: 0;
         left: 0;
         border-radius: 1rem;
-        opacity: 0.5;
+        opacity: 0.3;
         background-position: center center;
     }
 
@@ -117,10 +144,10 @@ export default {
         display: flex;
         flex-direction: row;
         height: 100%;
-        backdrop-filter: blur(5px);
+        backdrop-filter: blur(3px) saturate(0.4);
         border-radius: 1rem;
         background: #eee;
-        background: radial-gradient(rgba(238,238,238,0),rgb(238, 238, 238));
+        background: radial-gradient(rgb(238, 238, 238), rgba(238,238,238,0));
     }
 
     .poster {
@@ -146,10 +173,49 @@ export default {
         line-height: 1em;
         padding: 2rem;
 
-        .btn {
+        .vote-button {
             font-size: 1.5rem;
-            padding: 0.2rem 1.25rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.2em;
             display: inline-block;
+            border: 3px solid transparent;
+            transition: background-color 0.1s ease, transform 0.1s ease;
+            color: #fff;
+            background-color: #2F2F2F;
+            transform: scale(0.9);
+
+            &.is-selected {
+                transform: scale(1.1);
+            }
+
+            &.vote-button-yes {
+                &.is-selected {
+                    background-color: #3EC487;
+                    color: #fff;
+                }
+            }
+
+            &.vote-button-no {
+                &.is-selected {
+                    background-color: #F03A5F;
+                    color: #fff;
+                }
+            }
+        }
+    }
+
+    .vote-label {
+        font-size: 1.5rem;
+        padding: 0.5rem;
+
+        border-bottom: 6px solid transparent;
+
+        &.vote-label-yes {
+            border-color: #3EC487;
+        }
+
+        &.vote-label-no {
+            border-color: #F03A5F;
         }
     }
 

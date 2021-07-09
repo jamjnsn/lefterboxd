@@ -14,6 +14,15 @@ class VoteController extends Controller
         $this->middleware('auth');
     }
 
+    function get($id) {
+        $vote = MovieRatings::where([
+            'user_id' => Auth::user()->id,
+            'movie_id' => $id
+        ])->first();
+
+        return $vote;
+    }
+
     function vote($id, Request $request) {
         $movie = Movie::find_or_fetch($id);
 

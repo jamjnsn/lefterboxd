@@ -18,6 +18,12 @@
 
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+
+    @guest
+    <script>window.isLoggedIn = false;</script>
+    @else
+    <script>window.isLoggedIn = true;</script>
+    @endguest
 </head>
 <body>
     <div id="app">

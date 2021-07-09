@@ -14,7 +14,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $movies = Tmdb::getMoviesApi()->getTopRated()['results'];
+        $movies = Tmdb::getMoviesApi()->getTopRated(['region' => 'ca'])['results'];
         return view('home', [ 'movies' => $movies ]);
     }
 }

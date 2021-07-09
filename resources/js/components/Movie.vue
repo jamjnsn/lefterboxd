@@ -120,7 +120,8 @@ export default {
         justify-content: center;
         align-content: center;
         text-align: center;
-        font-size: 2rem;
+        font-size: 2.5rem;
+        line-height: 1em;
         padding: 2rem;
 
         .btn {

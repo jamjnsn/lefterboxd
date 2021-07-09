@@ -1,33 +1,14 @@
 @import 'variables';
 @import '~bootstrap/scss/bootstrap';
 
-.movie-page {
-    display: flex;
-    flex-direction: row;
-}
-
-.poster-container {
-    flex: 0 0 auto;
-
-    .poster {
-        img {
-            border-radius: 0.5rem;
-        }
-    }
-}
-
-.vote-container {
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-
-    font-size: 3rem;
-    text-align: center;
-
-    .btn {
+.navbar {
+    .navbar-brand {
         font-size: 2rem;
-        padding: 0.2em 0.75em;
+        font-weight: bold;
+
+        img {
+            display: inline-block;
+            align-content: center;
+        }
     }
 }

@@ -142,12 +142,12 @@ export default {
         justify-content: center;
         align-content: center;
         text-align: center;
-        font-size: 2.5rem;
+        font-size: 1.5rem;
         line-height: 1em;
         padding: 2rem;
 
         .btn {
-            font-size: 2rem;
+            font-size: 1.5rem;
             padding: 0.2rem 1.25rem;
             display: inline-block;
         }
@@ -174,7 +174,7 @@ export default {
         }
 
         .vote-count {
-            font-size: 0.5em;
+            font-size: 0.55em;
         }
     }
 </style>

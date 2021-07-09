@@ -59,6 +59,21 @@ class Movie extends Model
         ])->count();
     }
 
+    public static function cacheAll($movies) {
+        $cachedMovies = [];
+
+        foreach($movies as $movie) {
+            $cachedMovie = Movie::firstOrNew([
+                'id' => $movie->id
+            ]);
+
+            $cachedMovie->data = $movie;
+            $cachedMovie->save();
+
+            array_push($cachedMovies, $cachedMovie);
+        }
+    }
+
     public static function find_or_fetch($id) {
         $movie = Movie::find($id);
 

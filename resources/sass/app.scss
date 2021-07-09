@@ -12,3 +12,9 @@
         }
     }
 }
+
+.movie-list {
+    .movie:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+}

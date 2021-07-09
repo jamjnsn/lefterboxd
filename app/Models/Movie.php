@@ -19,6 +19,7 @@ class Movie extends Model
 
     protected $appends = [
         'poster_url',
+        'backdrop_url',
         'release_year',
         'yes_votes',
         'no_votes',
@@ -32,6 +33,10 @@ class Movie extends Model
 
     public function getPosterUrlAttribute() {
         return 'https://image.tmdb.org/t/p/w500' . $this->data['poster_path'];
+    }
+
+    public function getBackdropUrlAttribute() {
+        return 'https://image.tmdb.org/t/p/w1280' . $this->data['backdrop_path'];
     }
 
     public function getYesVotesAttribute() {

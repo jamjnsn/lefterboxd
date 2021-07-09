@@ -1,5 +1,6 @@
 <template>
     <div class="movie">
+        <div class="backdrop" v-if="isLoaded" :style="backdropStyle"></div>
         <div class="wrapper" v-if="isLoaded">
             <div class="poster">
                 <img :src="data.poster_url" alt="Movie poster" width="300px" height="450px" />
@@ -51,6 +52,9 @@ export default {
             } else {
                 return '0%'
             }
+        },
+        backdropStyle() {
+            return 'background-image:url('+this.data.backdrop_url+');'
         }
     },
     mounted() {
@@ -95,10 +99,28 @@ export default {
         position: relative;
     }
 
+    .backdrop {
+        z-index: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border-radius: 1rem;
+        opacity: 0.5;
+        background-position: center center;
+    }
+
     .wrapper {
+        position: relative;
+        z-index: 1;
         display: flex;
         flex-direction: row;
         height: 100%;
+        backdrop-filter: blur(5px);
+        border-radius: 1rem;
+        background: #eee;
+        background: radial-gradient(rgba(238,238,238,0),rgb(238, 238, 238));
     }
 
     .poster {

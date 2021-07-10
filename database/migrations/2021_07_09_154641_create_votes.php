@@ -20,7 +20,7 @@ class CreateVotes extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
 
-            $table->unsignedBigInteger('movie_id')->unique();
+            $table->unsignedBigInteger('movie_id');
 
             $table->enum('option', ['yes', 'no'])->default('yes');
         });

@@ -133,7 +133,7 @@ export default {
         bottom: 0;
         left: 0;
         border-radius: 1rem;
-        opacity: 0.3;
+        opacity: 0.1;
         background-position: center center;
     }
 
@@ -143,9 +143,7 @@ export default {
         display: flex;
         flex-direction: row;
         height: 100%;
-        backdrop-filter: blur(10px) saturate(0.8);
         border-radius: 1rem;
-        // background: radial-gradient(rgb(238, 238, 238), rgba(238,238,238,0));
     }
 
     .poster {

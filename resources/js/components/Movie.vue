@@ -7,7 +7,7 @@
             </div>
 
             <div class="vote">
-                <p>Is <strong>{{ data.data.title }} <small>({{ data.release_year }})</small></strong> leftist?</p>
+                <p class="prompt">Is <strong>{{ data.data.title }} <small>({{ data.release_year }})</small></strong> leftist?</p>
 
                 <div class="votes-container">
                     <div class="votes yes-votes">
@@ -105,11 +105,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+   @import '~bulma/sass/utilities/_all';
+
     .movie {
-        height: 300px;
-        background: #eee;
+        background: #2a3036;
         border-radius: 1rem;
         position: relative;
+        width: 100%;
+        font-size: 1.15rem;
+        height: 200px;
+
+        @include tablet {
+            font-size: 1.5rem;
+            height: 300px;
+        }
+    }
+
+    .prompt {
+        margin-bottom: 0.5em;
     }
 
     .backdrop {
@@ -130,10 +143,9 @@ export default {
         display: flex;
         flex-direction: row;
         height: 100%;
-        backdrop-filter: blur(3px) saturate(0.4);
+        backdrop-filter: blur(10px) saturate(0.8);
         border-radius: 1rem;
-        background: #eee;
-        background: radial-gradient(rgb(238, 238, 238), rgba(238,238,238,0));
+        // background: radial-gradient(rgb(238, 238, 238), rgba(238,238,238,0));
     }
 
     .poster {
@@ -150,18 +162,19 @@ export default {
 
     .vote {
         flex: 1 1 auto;
+        padding: 0.5em;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-content: center;
         text-align: center;
-        font-size: 1.5rem;
         line-height: 1em;
-        padding: 2rem;
 
         .vote-button {
-            font-size: 1.5rem;
-            padding: 0.5rem 1.25rem;
+            font-size: 0.8em;
+            margin: 0.25em;
+            cursor: pointer;
+            padding: 0.5em 1.25em;
             border-radius: 0.2em;
             display: inline-block;
             border: 3px solid transparent;
@@ -191,8 +204,7 @@ export default {
     }
 
     .vote-label {
-        font-size: 1.5rem;
-        padding: 0.5rem;
+        padding: 0.5em;
 
         border-bottom: 6px solid transparent;
 
@@ -221,12 +233,8 @@ export default {
         align-items: center;
         justify-content: center;
 
-        .votes {
-            padding: 0.5rem;
-        }
-
         .vote-count {
-            font-size: 0.55em;
+            font-size: 0.65em;
         }
     }
 </style>

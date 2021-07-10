@@ -1,35 +1,50 @@
-@import 'variables';
-@import '~bootstrap/scss/bootstrap';
+@import 'utilities';
+@import '~bulma';
+@import 'overrides';
+
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+}
+
+#site-nav {
+    padding: 1rem 0;
+}
 
 .navbar {
-    padding: 0.5rem;
+    border: none;
 
-    .navbar-brand {
-        font-size: 2rem;
-        font-weight: bold;
+    .navbar-item {
         display: flex;
         align-items: center;
-        padding: 0;
-
-        .app-name {
-            display: block;
-            margin: 0;
-            margin-left: 0.5rem;
-        }
-
-        img {
-            display: block;
-        }
     }
 
-    &.navbar-transparent {
-        background-color: transparent;
-        box-shadow: none;
+    .buttons {
+        display: block;
+
     }
+}
+
+.container {
+    padding: 1rem;
 }
 
 .movie-list {
     .movie:not(:last-child) {
         margin-bottom: 1rem;
     }
+}
+
+.logo {
+    display: block;
+    height: 25px;
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+.app-title {
+    font-size: 2rem;
 }

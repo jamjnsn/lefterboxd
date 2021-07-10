@@ -92,6 +92,8 @@ export default {
                     .catch(error => {
                         console.log(error)
                     })
+            } else {
+                this.isLoaded = true
             }
         },
         voteYes() {

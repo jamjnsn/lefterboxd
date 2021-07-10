@@ -49,7 +49,7 @@ class CachedMovie extends Model
 
         if($totalCount > 0) {
             if($yesCount > 0) {
-                $yesPercent = round(($totalCount / $yesCount) * 100);
+                $yesPercent = round(($yesCount / $totalCount) * 100);
                 $noPercent = 100 - $yesPercent;
             } else {
                 $yesPercent = 0;

@@ -17,6 +17,10 @@ class CachedMovie extends Model
         'data' => AsArrayObject::class,
     ];
 
+    protected $fillable = [
+        'id', 'data'
+    ];
+
     protected $appends = [
         'poster_url',
         'backdrop_url',
@@ -76,7 +80,7 @@ class CachedMovie extends Model
 
         foreach($movies as $movie) {
             $cachedMovie = CachedMovie::firstOrNew([
-                'id' => $movie->id
+                'id' => $movie["id"]
             ]);
 
             $cachedMovie->data = $movie;
@@ -84,6 +88,8 @@ class CachedMovie extends Model
 
             array_push($cachedMovies, $cachedMovie);
         }
+
+        return $cachedMovies;
     }
 
     public static function findOrFetch($id) {

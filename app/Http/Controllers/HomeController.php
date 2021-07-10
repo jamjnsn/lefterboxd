@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Tmdb\Laravel\Facades\Tmdb;
 
 class HomeController extends Controller
 {
@@ -14,7 +13,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $movies = Tmdb::getMoviesApi()->getTopRated(['region' => 'ca'])['results'];
-        return view('home', [ 'movies' => $movies ]);
+        return view('home');
     }
 }

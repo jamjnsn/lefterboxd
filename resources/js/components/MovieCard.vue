@@ -1,13 +1,14 @@
 <template>
+    <transition name="fade">
     <div class="movie">
         <div class="backdrop" v-if="isLoaded" :style="backdropStyle"></div>
         <div class="wrapper" v-if="isLoaded">
             <div class="poster">
-                <img :src="data.poster_url" alt="Movie poster" width="300px" height="450px" />
+                <img :src="movie.poster_url" alt="Movie poster" width="300px" height="450px" />
             </div>
 
             <div class="vote">
-                <p class="prompt">Is <strong>{{ data.data.title }} <small>({{ data.release_year }})</small></strong> leftist?</p>
+                <p class="prompt">Is <strong>{{ movie.data.title }} <small>({{ movie.release_year }})</small></strong> leftist?</p>
 
                 <div class="votes-container">
                     <div class="votes yes-votes">
@@ -19,7 +20,7 @@
                             :class="currentVote && currentVote.option == 'yes' ? 'is-selected' : ''"
                             >Yes</button>
                         <div v-if="!isLoggedIn" class="vote-label-yes vote-label">Yes</div>
-                        <div class="vote-count">{{ data.counts.yesPercent }}%</div>
+                        <div class="vote-count">{{ movie.counts.yesPercent }}%</div>
                     </div>
 
                     <div class="votes no-votes">
@@ -31,25 +32,26 @@
                             :class="currentVote && currentVote.option == 'no' ? 'is-selected' : ''"
                             >No</button>
                         <div v-if="!isLoggedIn" class="vote-label-no vote-label">No</div>
-                        <div class="vote-count">{{ data.counts.noPercent }}%</div>
+                        <div class="vote-count">{{ movie.counts.noPercent }}%</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="loading" v-if="!isLoaded">
-            <div>Loading...</div>
+            <div><img src="/images/loading.svg" alt="Loading..." /></div>
         </div>
     </div>
+    </transition>
 </template>
 
 <script>
 export default {
-    props: [ 'id' ],
+    props: [ 'id', 'prefetched' ],
     data() {
         return {
+            movie: [],
             isLoaded: false,
-            data: [],
             currentVote: null
         }
     },
@@ -58,27 +60,34 @@ export default {
             return window.isLoggedIn
         },
         backdropStyle() {
-            return 'background-image:url('+this.data.backdrop_url+');'
+            return 'background-image:url('+this.movie.backdrop_url+');'
         }
     },
     mounted() {
-        this.update()
+        if(this.prefetched == null) {
+            this.update()
+        } else {
+            this.movie = this.prefetched
+            this.updateVote()
+        }
     },
     methods: {
         update() {
-            window.axios.get('/api/movie/'+this.id)
+            window.axios.get('/api/movie/'+this.movie.id)
                 .then(response => {
-                    this.data = response.data
-                    this.isLoaded = true
+                    this.movie = response.data
                 })
                 .catch(error => {
                     console.log(error)
                 })
-
+                .then(this.updateVote())
+        },
+        updateVote() {
             if(this.isLoggedIn) {
-                window.axios.get('/movie/'+this.id+'/vote')
+                window.axios.get('/movie/'+this.movie.id+'/vote')
                     .then(response => {
                         this.currentVote = response.data
+                        this.isLoaded = true
                     })
                     .catch(error => {
                         console.log(error)
@@ -92,7 +101,11 @@ export default {
             this.sendVote('no')
         },
         sendVote(option) {
-            window.axios.post('/movie/'+this.id+'/vote', { option: option })
+            this.currentVote = {
+                option: option
+            }
+
+            window.axios.post('/movie/'+this.movie.id+'/vote', { option: option })
                 .then(response => {
                     this.update()
                 })
@@ -105,7 +118,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-   @import '~bulma/sass/utilities/_all';
+    @import '~bulma/sass/utilities/_all';
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+    }
 
     .movie {
         background: #2a3036;
@@ -178,7 +199,7 @@ export default {
             border: 3px solid transparent;
             transition: background-color 0.1s ease, transform 0.1s ease;
             color: #fff;
-            background-color: #2F2F2F;
+            background-color: $grey-dark;
             transform: scale(0.9);
 
             &.is-selected {
@@ -187,7 +208,7 @@ export default {
 
             &.vote-button-yes {
                 &.is-selected {
-                    background-color: #3EC487;
+                    background-color: $success;
                     color: #fff;
                 }
             }

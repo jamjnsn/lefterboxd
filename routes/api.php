@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/movie/{id}', [App\Http\Controllers\MovieController::class, 'get']);
+Route::get('/movies', [App\Http\Controllers\MovieController::class, 'list']);

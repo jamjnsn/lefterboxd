@@ -80,6 +80,15 @@
         <main>
             @yield('content')
         </main>
+
+        <footer id="site-footer">
+            <div>A fan project to help make the world better.</div>
+            <div>
+                <a href="https://globehell.libsyn.com/">
+                    <img src="/images/globehell.jpg" class="globe" alt="globe hell warning" />
+                </a>
+            </div>
+        </footer>
     </div>
 </body>
 </html>

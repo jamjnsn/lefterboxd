@@ -83,3 +83,12 @@ body {
     height: auto;
     margin: 1rem;
 }
+
+.tos {
+    height: 75px;
+    overflow-y: scroll;
+
+    p:not(:last-child) {
+        margin-bottom: 1em;
+    }
+}

@@ -5,10 +5,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Config;
 
-$baseUrl = Config::get('app.base_url');
+if(Config::get('app.base_url')) {
+    URL::forceRootUrl(Config::get('app.base_url'));
+}
 
-if($baseUrl) {
-    URL::forceRootUrl($baseUrl);
+if(Config::get('app.base_scheme')) {
+    URL::forceScheme(Config::get('app.base_scheme'));
 }
 
 Route::middleware('auth')->group(function() {
